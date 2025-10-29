@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ethereal Portal</title>
+
+  <style>
+    @font-face {
+      font-family: 'MyCustomFont';
+      src: url('https://cdn.glitch.global/0aad2b40-40e5-485c-900b-081e58f548af/mplus-1m-bold.ttf?v=1746570303056') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    :root {
+      --main-font: 'MyCustomFont', monospace;
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #ffffff;
+      font-family: var(--main-font);
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    #instructionText {
+      position: absolute;
+      top: 55%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 650px;
+      text-align: left;
+      line-height: 1.5;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 2s ease;
+      z-index: 10;
+      white-space: pre-wrap;
+    }
+
+    #instructionText.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body onclick="goToNextPage()">
+
+<div id="instructionText">
+This work reflects thoughts on identity and perception, created with care and deep respect for the lives behind each fragment found on the streets of Berlin.
+
+Enter slowly. Explore. Linger. Use bigger screens.
+
+
+
+Each time you refresh the page, the stories rearrange themselves.
+Sometimes they hide in plain sight. Look closely. Listen softly.
+Use the arrow keys to wander forward and backward through this shifting space.
+
+At one point, the camera may open.
+A private moment. Yours alone.
+Because here, identity is never fixed. It fractures and reforms.
+  
+  
+  
+  
+When you are ready...make a click
+
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+<script>
+  let t = 0;
+  let maxSize;
+  let portalSize = 0;
+  let startTime;
+
+  function setup() {
+    createCanvas(windowWidth, windowHeight);
+    noStroke();
+    startTime = millis();
+    maxSize = dist(0, 0, width, height);
+
+    // Show instruction text after 5 seconds
+    setTimeout(() => {
+      document.getElementById('instructionText').classList.add('show');
+    }, 5000);
+  }
+
+  function draw() {
+    background(255, 255, 255, 30);
+
+    let gridSize = 10;
+    translate(width / 2, height / 2);
+    rotate(PI / 4);
+
+    let currentMax = portalSize;
+
+    for (let x = -currentMax; x < currentMax; x += gridSize) {
+      for (let y = -currentMax; y < currentMax; y += gridSize) {
+        let distToCenter = dist(0, 0, x, y);
+        if (distToCenter < portalSize) {
+          let n = noise(x * 0.002, y * 0.002, t * 0.01);
+          let col = color(
+            0 + n * 0,
+            0 + n * 0,
+            0 + n * 0,
+            90
+          );
+          fill(col);
+          rect(x, y, gridSize, gridSize);
+        }
+      }
+    }
+
+    if (portalSize < maxSize) {
+      portalSize += 4;
+    } else {
+      portalSize = maxSize;
+      noLoop();
+    }
+
+    t += 0.008;
+  }
+
+  function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+    maxSize = dist(0, 0, width, height);
+  }
+
+  function goToNextPage() {
+    window.location.href = "https://post-family-margaret.glitch.me/";
+  }
+</script>
+
+</body>
+</html>
